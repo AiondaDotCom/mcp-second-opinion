@@ -1,0 +1,51 @@
+{
+  "providers": {
+    "openai": {
+      "enabled": true,
+      "apiKey": "your_openai_api_key_here",
+      "model": "gpt-4",
+      "defaultRole": "helpful assistant",
+      "customPrompt": "You are providing a second opinion to help solve technical problems."
+    },
+    "gemini": {
+      "enabled": true,
+      "model": "gemini-2.5-pro",
+      "defaultRole": "technical expert",
+      "customPrompt": "Provide a third opinion with focus on alternative solutions."
+    },
+    "ollama": {
+      "enabled": true,
+      "baseUrl": "http://localhost:11434",
+      "model": "llama2",
+      "defaultRole": "local AI assistant",
+      "customPrompt": "You are a local AI providing cost-effective opinions on technical problems.",
+      "timeout": 30000
+    }
+  },
+  "tools": {
+    "askChatGPT": {
+      "name": "Ask ChatGPT for Second Opinion",
+      "description": "Get a second opinion from ChatGPT on technical problems",
+      "enabled": true
+    },
+    "askGemini": {
+      "name": "Ask Gemini for Third Opinion",
+      "description": "Get a third opinion from Google Gemini",
+      "enabled": true
+    },
+    "askOllama": {
+      "name": "Ask Ollama Local Model",
+      "description": "Get a local AI opinion using Ollama (cost-free, private)",
+      "enabled": true
+    },
+    "compareAIOpinions": {
+      "name": "Compare AI Opinions",
+      "description": "Get opinions from all enabled AIs and compare them",
+      "enabled": true
+    }
+  },
+  "logging": {
+    "level": "info",
+    "enabled": true
+  }
+}

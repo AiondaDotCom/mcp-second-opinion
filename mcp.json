@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "second-opinion": {
+      "command": "node",
+      "args": [
+        "/Users/saf/dev/mcp-second-opinion/dist/server/index.js"
+      ]
+    }
+  }
+}
