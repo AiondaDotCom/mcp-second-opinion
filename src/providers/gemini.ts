@@ -1,10 +1,8 @@
 import { AIProvider } from './base.js';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import { promisify } from 'util';
 import { AISecondOpinionConfig } from '../types/index.js';
 import logger from '../utils/logger.js';
-
-const execAsync = promisify(exec);
 
 export class GeminiProvider extends AIProvider {
   name = 'gemini';
@@ -21,37 +19,56 @@ export class GeminiProvider extends AIProvider {
 
   async generateResponse(prompt: string, role?: string): Promise<string> {
     try {
-      const escapedPrompt = prompt.replace(/"/g, '\\"').replace(/\n/g, '\\n');
-      const command = `gemini -m "${this.config.model}" -p "${escapedPrompt}"`;
+      logger.debug(`Executing Gemini CLI: gemini -m "${this.config.model}" -p`);
       
-      logger.debug(`Executing Gemini CLI: gemini -m "${this.config.model}" -p "[prompt]"`);
-      
-      const { stdout, stderr } = await execAsync(command, {
-        timeout: 60000,
-        maxBuffer: 1024 * 1024
+      return new Promise((resolve, reject) => {
+        const child = spawn('gemini', ['-m', this.config.model, '-p'], {
+          timeout: 60000
+        });
+
+        let stdout = '';
+        let stderr = '';
+
+        child.stdout.on('data', (data) => {
+          stdout += data.toString();
+        });
+
+        child.stderr.on('data', (data) => {
+          stderr += data.toString();
+        });
+
+        child.on('close', (code) => {
+          if (stderr && !stderr.includes('warning') && !stderr.includes('Loaded cached credentials')) {
+            logger.warn('Gemini CLI stderr:', stderr);
+          }
+
+          if (code !== 0) {
+            reject(new Error(`Gemini CLI exited with code ${code}: ${stderr}`));
+            return;
+          }
+
+          if (!stdout.trim()) {
+            reject(new Error('Gemini CLI returned empty response'));
+            return;
+          }
+
+          resolve(stdout.trim());
+        });
+
+        child.on('error', (error) => {
+          if (error.message.includes('ENOENT')) {
+            reject(new Error('Gemini CLI not found - please install it first'));
+          } else {
+            reject(new Error(`Gemini CLI error: ${error.message}`));
+          }
+        });
+
+        // Send prompt via stdin
+        child.stdin.write(prompt);
+        child.stdin.end();
       });
-
-      if (stderr && !stderr.includes('warning')) {
-        logger.warn('Gemini CLI stderr:', stderr);
-      }
-
-      if (!stdout.trim()) {
-        throw new Error('Gemini CLI returned empty response');
-      }
-
-      return stdout.trim();
     } catch (error) {
       logger.error('Gemini CLI error:', error);
-      
-      if (error instanceof Error) {
-        if (error.message.includes('timeout')) {
-          throw new Error('Gemini CLI timeout - request took too long');
-        }
-        if (error.message.includes('ENOENT') || error.message.includes('not found')) {
-          throw new Error('Gemini CLI not found - please install it first');
-        }
-      }
-      
       throw new Error(`Gemini CLI error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

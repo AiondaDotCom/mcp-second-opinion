@@ -16,10 +16,17 @@
     "ollama": {
       "enabled": true,
       "baseUrl": "http://localhost:11434",
-      "model": "llama2",
+      "model": "llama3",
       "defaultRole": "local AI assistant",
       "customPrompt": "You are a local AI providing cost-effective opinions on technical problems.",
       "timeout": 30000
+    },
+    "claude": {
+      "enabled": true,
+      "model": "sonnet",
+      "defaultRole": "AI assistant",
+      "customPrompt": "You are Claude providing a fourth opinion on technical problems with thoughtful analysis.",
+      "timeout": 120000
     }
   },
   "tools": {
@@ -36,6 +43,11 @@
     "askOllama": {
       "name": "Ask Ollama Local Model",
       "description": "Get a local AI opinion using Ollama (cost-free, private)",
+      "enabled": true
+    },
+    "askClaude": {
+      "name": "Ask Claude for Fourth Opinion",
+      "description": "Get a fourth opinion from Claude CLI",
       "enabled": true
     },
     "compareAIOpinions": {

@@ -21,6 +21,13 @@ export interface AISecondOpinionConfig {
       customPrompt?: string;
       timeout?: number;
     };
+    claude: {
+      enabled: boolean;
+      model?: string;
+      defaultRole: string;
+      customPrompt?: string;
+      timeout?: number;
+    };
   };
   tools: {
     askChatGPT: {
@@ -34,6 +41,11 @@ export interface AISecondOpinionConfig {
       enabled: boolean;
     };
     askOllama: {
+      name: string;
+      description: string;
+      enabled: boolean;
+    };
+    askClaude: {
       name: string;
       description: string;
       enabled: boolean;

@@ -23,6 +23,13 @@ export const AISecondOpinionConfigSchema = z.object({
       customPrompt: z.string().optional(),
       timeout: z.number().optional(),
     }),
+    claude: z.object({
+      enabled: z.boolean(),
+      model: z.string().optional(),
+      defaultRole: z.string(),
+      customPrompt: z.string().optional(),
+      timeout: z.number().optional(),
+    }),
   }),
   tools: z.object({
     askChatGPT: z.object({
@@ -36,6 +43,11 @@ export const AISecondOpinionConfigSchema = z.object({
       enabled: z.boolean(),
     }),
     askOllama: z.object({
+      name: z.string(),
+      description: z.string(),
+      enabled: z.boolean(),
+    }),
+    askClaude: z.object({
       name: z.string(),
       description: z.string(),
       enabled: z.boolean(),

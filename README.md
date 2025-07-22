@@ -10,7 +10,7 @@
 
 ## Features
 
-- **Multiple AI Providers**: Get opinions from OpenAI GPT, Google Gemini, and local Ollama models
+- **Multiple AI Providers**: Get opinions from OpenAI GPT, Google Gemini, Claude CLI, and local Ollama models
 - **Easy Comparison**: Compare responses from all enabled providers side-by-side
 - **Flexible Configuration**: Runtime configuration without code changes
 - **MCP Protocol**: Integrates seamlessly with Claude Desktop and other MCP clients
@@ -21,8 +21,9 @@
 
 1. **Node.js** (v16 or higher)
 2. **OpenAI API Key** (for GPT responses)
-3. **Gemini CLI** (for Gemini responses) 
-4. **Ollama** (optional, for local AI responses)
+3. **Gemini CLI** (for Gemini responses)
+4. **Claude CLI** (for Claude responses)
+5. **Ollama** (optional, for local AI responses)
 
 ### Installation
 
@@ -52,6 +53,17 @@ npm install -g @google/generative-ai-cli
 
 # Authenticate once (opens browser for login)
 gemini auth login
+```
+
+#### Claude Configuration
+The server uses the Claude CLI tool, which should already be available if you're running this:
+
+```bash
+# Verify Claude CLI is available
+claude --version
+
+# The server will use your existing Claude authentication
+# No additional setup required if Claude CLI is working
 ```
 
 #### Ollama Configuration (Optional)
@@ -94,16 +106,17 @@ Add to your Claude Desktop MCP configuration:
 
 ## Available Tools
 
-1. **get_chatgpt_opinion** - Get a second opinion from OpenAI GPT
-2. **get_gemini_opinion** - Get a third opinion from Google Gemini (via CLI)
-3. **get_ollama_opinion** - Get a local AI opinion using Ollama
-4. **compare_ai_opinions** - Get opinions from all enabled providers and compare
+1. **ask_chatgpt_second_opinion** - Get a second opinion from OpenAI GPT
+2. **ask_gemini_third_opinion** - Get a third opinion from Google Gemini (via CLI)
+3. **ask_claude_fourth_opinion** - Get a fourth opinion from Claude CLI
+4. **ask_ollama_local_opinion** - Get a local AI opinion using Ollama
+5. **compare_ai_opinions** - Get opinions from all enabled providers and compare
 
 ## Configuration
 
 Edit `config/default.json` to customize:
 
-- **Models**: Change which models to use (e.g., `gpt-4`, `gemini-2.5-pro`, `llama2`)
+- **Models**: Change which models to use (e.g., `gpt-4`, `gemini-2.5-pro`, `sonnet`, `llama2`)
 - **Prompts**: Customize system prompts for each provider
 - **Enable/Disable**: Turn providers on/off as needed
 
@@ -130,6 +143,7 @@ npm run dev  # if available
 ## Why This Approach?
 
 - **Gemini CLI**: Eliminates API key management for Google services
+- **Claude CLI**: Direct integration with Claude using existing authentication
 - **Local Ollama**: Privacy-focused, cost-free AI responses
 - **OpenAI Integration**: Industry-standard GPT responses
 - **MCP Standard**: Future-proof integration with Claude and other clients

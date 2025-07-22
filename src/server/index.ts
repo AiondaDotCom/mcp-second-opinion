@@ -44,6 +44,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: tools.ask_ollama_local_opinion.inputSchema
       },
       {
+        name: tools.ask_claude_fourth_opinion.name,
+        description: tools.ask_claude_fourth_opinion.description,
+        inputSchema: tools.ask_claude_fourth_opinion.inputSchema
+      },
+      {
         name: tools.compare_ai_opinions.name,
         description: tools.compare_ai_opinions.description,
         inputSchema: tools.compare_ai_opinions.inputSchema
@@ -67,6 +72,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request): Promise<CallToo
         break;
       case tools.ask_ollama_local_opinion.name:
         result = await handlers.askOllama(args || {});
+        break;
+      case tools.ask_claude_fourth_opinion.name:
+        result = await handlers.askClaude(args || {});
         break;
       case tools.compare_ai_opinions.name:
         result = await handlers.compareAIOpinions(args || {});

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an MCP (Model Context Protocol) server that provides AI second opinion tools, allowing users to get responses from multiple AI providers (OpenAI, Gemini, Ollama) and compare their outputs. The server exposes tools through the MCP protocol for integration with Claude Desktop and other MCP clients.
+This is an MCP (Model Context Protocol) server that provides AI second opinion tools, allowing users to get responses from multiple AI providers (OpenAI, Gemini, Claude CLI, Ollama) and compare their outputs. The server exposes tools through the MCP protocol for integration with Claude Desktop and other MCP clients.
 
 ## Development Commands
 
@@ -19,16 +19,17 @@ The MCP server binary is configured in package.json as `dist/server/index.js` an
 ### Provider Pattern
 The codebase uses a clean provider abstraction pattern:
 - `src/providers/base.ts` - Abstract `AIProvider` base class defining the interface
-- `src/providers/openai.ts`, `src/providers/gemini.ts`, `src/providers/ollama.ts` - Concrete implementations
+- `src/providers/openai.ts`, `src/providers/gemini.ts`, `src/providers/claude.ts`, `src/providers/ollama.ts` - Concrete implementations
 - Each provider handles authentication, API calls, and response formatting consistently
 
 ### MCP Server Structure
 - `src/server/index.ts` - Main MCP server initialization and stdio transport setup
 - `src/server/handlers.ts` - Request/response handlers for MCP protocol methods
-- `src/server/tools.ts` - Tool definitions and execution logic for the four main tools:
-  - `get_chatgpt_opinion` - OpenAI GPT responses
-  - `get_gemini_opinion` - Google Gemini responses  
-  - `get_ollama_opinion` - Local Ollama model responses
+- `src/server/tools.ts` - Tool definitions and execution logic for the five main tools:
+  - `ask_chatgpt_second_opinion` - OpenAI GPT responses
+  - `ask_gemini_third_opinion` - Google Gemini responses
+  - `ask_claude_fourth_opinion` - Claude CLI responses
+  - `ask_ollama_local_opinion` - Local Ollama model responses
   - `compare_ai_opinions` - Side-by-side comparison of multiple providers
 
 ### Configuration System
@@ -66,6 +67,12 @@ npm install -g @google/generative-ai-cli
 gemini auth login
 ```
 
+**Claude Setup:** The server uses the Claude CLI tool which should be available if you're running this. No additional setup required:
+```bash
+# Verify Claude CLI is available
+claude --version
+```
+
 Copy `.env.example` to `.env` and add your OpenAI key, or set it directly in your shell.
 
 ## Testing Structure
@@ -81,4 +88,5 @@ Copy `.env.example` to `.env` and add your OpenAI key, or set it directly in you
 - Error handling follows consistent patterns with proper error types
 - Configuration changes don't require code changes - modify `config/default.json`
 - New AI providers can be added by extending the `AIProvider` base class
-- All external API calls are properly wrapped with error handling and logging
+- All external API calls and CLI commands are properly wrapped with error handling and logging
+- The Claude provider uses the Claude CLI with `--print` flag for non-interactive responses

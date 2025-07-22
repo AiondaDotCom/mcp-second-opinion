@@ -1,6 +1,7 @@
 import { OpenAIProvider } from '../providers/openai.js';
 import { GeminiProvider } from '../providers/gemini.js';
 import { OllamaProvider } from '../providers/ollama.js';
+import { ClaudeProvider } from '../providers/claude.js';
 import { loadConfig } from '../config/loader.js';
 import { askQuestionSchema, compareOpinionsSchema } from '../utils/validation.js';
 
@@ -8,6 +9,7 @@ const config = loadConfig();
 const openaiProvider = new OpenAIProvider(config);
 const geminiProvider = new GeminiProvider(config);
 const ollamaProvider = new OllamaProvider(config);
+const claudeProvider = new ClaudeProvider(config);
 
 export async function askChatGPT(input: any) {
   const { question, context, role } = askQuestionSchema.parse(input);
@@ -39,6 +41,16 @@ export async function askOllama(input: any) {
   return { response };
 }
 
+export async function askClaude(input: any) {
+  const { question, context, role } = askQuestionSchema.parse(input);
+  if (!claudeProvider.isConfigured()) {
+    return { error: 'Claude provider not configured' };
+  }
+  const prompt = context ? `${context}\n\n${question}` : question;
+  const response = await claudeProvider.generateResponse(prompt, role);
+  return { response };
+}
+
 export async function compareAIOpinions(input: any) {
   const { question, context } = compareOpinionsSchema.parse(input);
   const opinions: any = {};
@@ -52,6 +64,9 @@ export async function compareAIOpinions(input: any) {
   }
   if (ollamaProvider.isConfigured()) {
     opinions.ollama = await ollamaProvider.generateResponse(prompt);
+  }
+  if (claudeProvider.isConfigured()) {
+    opinions.claude = await claudeProvider.generateResponse(prompt);
   }
 
   return opinions;

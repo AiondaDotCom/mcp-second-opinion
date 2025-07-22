@@ -43,6 +43,20 @@ export const tools = {
       required: ['question'],
     },
   },
+  ask_claude_fourth_opinion: {
+    name: 'ask_claude_fourth_opinion',
+    description: config.tools.askClaude.description,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        question: { type: 'string' },
+        context: { type: 'string' },
+        role: { type: 'string' },
+        model: { type: 'string' },
+      },
+      required: ['question'],
+    },
+  },
   compare_ai_opinions: {
     name: 'compare_ai_opinions',
     description: 'Get opinions from all enabled AIs and compare them',
