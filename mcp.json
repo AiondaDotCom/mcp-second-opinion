@@ -3,8 +3,9 @@
     "second-opinion": {
       "command": "node",
       "args": [
-        "dist/server/index.js"
-      ]
+        "/Users/saf/dev/mcp-second-opinion/dist/server/index.js"
+      ],
+      "cwd": "/Users/saf/dev/mcp-second-opinion"
     }
   }
 }
