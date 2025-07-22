@@ -2,9 +2,13 @@ import { AISecondOpinionConfigSchema } from './schema.js';
 import { AISecondOpinionConfig } from '../types/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 export function loadConfig(): AISecondOpinionConfig {
-  const configPath = path.resolve(process.cwd(), 'config', 'default.json');
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const projectRoot = path.resolve(__dirname, '..', '..');
+  const configPath = path.resolve(projectRoot, 'config', 'default.json');
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
   
   // Override API keys from environment variables
