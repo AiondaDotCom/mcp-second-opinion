@@ -71,6 +71,12 @@ node dist/server/index.js
 
 The server runs as an MCP server using stdio transport, ready to connect with MCP clients.
 
+## Example Usage
+
+![MCP Second Opinion Server in Claude Desktop](example.png)
+
+*The MCP Second Opinion Server integrated with Claude Desktop, showing the available AI opinion tools in action.*
+
 ### Claude Desktop Integration
 
 Add to your Claude Desktop MCP configuration:
